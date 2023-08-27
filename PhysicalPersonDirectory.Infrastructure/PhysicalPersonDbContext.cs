@@ -11,28 +11,50 @@ public class PhysicalPersonDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PhysicalPerson>().ToTable("PhysicalPersons");
+        modelBuilder.Entity<PhysicalPerson>()
+            .ToTable("PhysicalPersons")
+            .HasMany(pp => pp.RelatedPhysicalPersons)
+            .WithOne(rp => rp.TargetPerson)
+            .HasForeignKey(rp => rp.TargetPersonId)
+            .OnDelete(DeleteBehavior.ClientCascade);
 
-        modelBuilder.Entity<City>().ToTable("Cities");
-        
+        modelBuilder.Entity<City>().ToTable("Cities")
+            .HasData(new()
+            {
+                Id = 1,
+                Name = "Tbilisi"
+            }, new()
+            {
+                Id = 2,
+                Name = "Kutaisi"
+            }, new()
+            {
+                Id = 3,
+                Name = "Batumi"
+            }, new()
+            {
+                Id = 4,
+                Name = "Other"
+            });
+
         modelBuilder.Entity<PhoneNumber>().ToTable("PhoneNumbers");
-        
+
         modelBuilder.Entity<RelatedPhysicalPerson>()
-            .ToTable("RelatedPhysicalPerson")
-            .HasKey(rrp=>new { SourcePersonId = rrp.TargetPersonId, rrp.RelatedPersonId});
-        
+            .ToTable("RelatedPhysicalPersons")
+            .HasKey(rrp => new { SourcePersonId = rrp.TargetPersonId, rrp.RelatedPersonId });
+
         modelBuilder.Entity<RelatedPhysicalPerson>()
             .HasOne(rpp => rpp.TargetPerson)
             .WithMany(pp => pp.RelatedPhysicalPersons)
             .HasForeignKey(rpp => rpp.TargetPersonId)
             .OnDelete(DeleteBehavior.ClientCascade);
-
-        modelBuilder.Entity<RelatedPhysicalPerson>()
-            .HasOne(rpp => rpp.TargetPerson)
-            .WithMany()
-            .HasForeignKey(rpp => rpp.TargetPersonId)
-            .OnDelete(DeleteBehavior.ClientCascade);
         
+        modelBuilder.Entity<RelatedPhysicalPerson>()
+            .HasOne(rpp => rpp.RelatedPerson)
+            .WithMany()
+            .HasForeignKey(rpp => rpp.RelatedPersonId)
+            .OnDelete(DeleteBehavior.ClientCascade);
+
         base.OnModelCreating(modelBuilder);
     }
 }

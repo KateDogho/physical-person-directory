@@ -14,6 +14,9 @@ builder.Services.AddDbContext<PhysicalPersonDbContext>(options =>
 });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
+builder.Services.AddScoped<IRelatedPhysicalPersonRepository, RelatedPhysicalPersonRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplication).Assembly));
 
@@ -31,10 +34,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Services.CreateScope().ServiceProvider.GetService<PhysicalPersonDbContext>()!.Database.Migrate();
 
 app.Run();

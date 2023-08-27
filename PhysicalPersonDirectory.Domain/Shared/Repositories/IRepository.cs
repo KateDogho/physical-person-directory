@@ -4,11 +4,13 @@ namespace PhysicalPersonDirectory.Domain.Shared.Repositories;
 
 public interface IRepository<TAggregateRoot> where TAggregateRoot : class
 {
-    TAggregateRoot? OfId(Guid id);
+    TAggregateRoot? OfId(int id);
 
     void Delete(TAggregateRoot aggregateRoot);
 
     void Insert(TAggregateRoot aggregateRoot);
+
+    void Insert(IEnumerable<TAggregateRoot> aggregateRoot);
 
     void Update(TAggregateRoot aggregateRoot);
 

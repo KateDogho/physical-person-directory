@@ -12,8 +12,8 @@ using PhysicalPersonDirectory.Infrastructure;
 namespace PhysicalPersonDirectory.Infrastructure.Migrations
 {
     [DbContext(typeof(PhysicalPersonDbContext))]
-    [Migration("20230827123818_Initial")]
-    partial class Initial
+    [Migration("20230827185108_Add-Physical-Person-Relation")]
+    partial class AddPhysicalPersonRelation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,28 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Tbilisi"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Kutaisi"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Batumi"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Other"
+                        });
                 });
 
             modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumber", b =>
@@ -125,7 +147,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
 
                     b.HasIndex("RelatedPersonId");
 
-                    b.ToTable("RelatedPhysicalPerson", (string)null);
+                    b.ToTable("RelatedPhysicalPersons", (string)null);
                 });
 
             modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumber", b =>
@@ -149,13 +171,13 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
             modelBuilder.Entity("PhysicalPersonDirectory.Domain.RelatedPhysicalPerson", b =>
                 {
                     b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "RelatedPerson")
-                        .WithMany("RelatedPhysicalPersons")
+                        .WithMany()
                         .HasForeignKey("RelatedPersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "TargetPerson")
-                        .WithMany()
+                        .WithMany("RelatedPhysicalPersons")
                         .HasForeignKey("TargetPersonId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();

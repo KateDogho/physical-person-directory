@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PhysicalPersonDirectory.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,7 +72,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RelatedPhysicalPerson",
+                name: "RelatedPhysicalPersons",
                 columns: table => new
                 {
                     TargetPersonId = table.Column<int>(type: "int", nullable: false),
@@ -79,18 +81,29 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RelatedPhysicalPerson", x => new { x.TargetPersonId, x.RelatedPersonId });
+                    table.PrimaryKey("PK_RelatedPhysicalPersons", x => new { x.TargetPersonId, x.RelatedPersonId });
                     table.ForeignKey(
-                        name: "FK_RelatedPhysicalPerson_PhysicalPersons_RelatedPersonId",
+                        name: "FK_RelatedPhysicalPersons_PhysicalPersons_RelatedPersonId",
                         column: x => x.RelatedPersonId,
                         principalTable: "PhysicalPersons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RelatedPhysicalPerson_PhysicalPersons_TargetPersonId",
+                        name: "FK_RelatedPhysicalPersons_PhysicalPersons_TargetPersonId",
                         column: x => x.TargetPersonId,
                         principalTable: "PhysicalPersons",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cities",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Tbilisi" },
+                    { 2, "Kutaisi" },
+                    { 3, "Batumi" },
+                    { 4, "Other" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -104,8 +117,8 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RelatedPhysicalPerson_RelatedPersonId",
-                table: "RelatedPhysicalPerson",
+                name: "IX_RelatedPhysicalPersons_RelatedPersonId",
+                table: "RelatedPhysicalPersons",
                 column: "RelatedPersonId");
         }
 
@@ -116,7 +129,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                 name: "PhoneNumbers");
 
             migrationBuilder.DropTable(
-                name: "RelatedPhysicalPerson");
+                name: "RelatedPhysicalPersons");
 
             migrationBuilder.DropTable(
                 name: "PhysicalPersons");

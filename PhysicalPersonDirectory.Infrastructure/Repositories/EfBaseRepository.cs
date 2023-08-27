@@ -19,7 +19,7 @@ public class EfBaseRepository<TAggregateRoot> : IRepository<TAggregateRoot>
             _dbContext.Set<TAggregateRoot>().Remove(aggregateRoot);
         }
 
-        public TAggregateRoot? OfId(Guid id)
+        public TAggregateRoot? OfId(int id)
         {
             return _dbContext.Set<TAggregateRoot>().Find(id);
         }
@@ -32,6 +32,11 @@ public class EfBaseRepository<TAggregateRoot> : IRepository<TAggregateRoot>
         public void Insert(TAggregateRoot aggregateRoot)
         {
             _dbContext.Set<TAggregateRoot>().AddAsync(aggregateRoot);
+        }
+
+        public void Insert(IEnumerable<TAggregateRoot> aggregateRoot)
+        {
+            _dbContext.Set<TAggregateRoot>().AddRangeAsync(aggregateRoot);
         }
 
         public void Update(TAggregateRoot aggregateRoot)

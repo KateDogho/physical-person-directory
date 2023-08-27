@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhysicalPersonDirectory.Infrastructure;
 
@@ -11,9 +12,11 @@ using PhysicalPersonDirectory.Infrastructure;
 namespace PhysicalPersonDirectory.Infrastructure.Migrations
 {
     [DbContext(typeof(PhysicalPersonDbContext))]
-    partial class PhysicalPersonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230827184556_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,11 +173,11 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "RelatedPerson")
                         .WithMany()
                         .HasForeignKey("RelatedPersonId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "TargetPerson")
-                        .WithMany()
+                        .WithMany("RelatedPhysicalPersons")
                         .HasForeignKey("TargetPersonId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
@@ -187,6 +190,8 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
             modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPerson", b =>
                 {
                     b.Navigation("PhoneNumbers");
+
+                    b.Navigation("RelatedPhysicalPersons");
                 });
 #pragma warning restore 612, 618
         }
