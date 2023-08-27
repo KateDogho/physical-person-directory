@@ -8,7 +8,7 @@ using PhysicalPersonDirectory.Infrastructure;
 
 #nullable disable
 
-namespace PhysicalPersonDirectoy.Insfrastructure.Migrations
+namespace PhysicalPersonDirectory.Infrastructure.Migrations
 {
     [DbContext(typeof(PhysicalPersonDbContext))]
     partial class PhysicalPersonDbContextModelSnapshot : ModelSnapshot

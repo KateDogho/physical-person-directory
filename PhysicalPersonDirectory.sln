@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Infrastructure", "PhysicalPersonDirectory.Infrastructure\PhysicalPersonDirectory.Infrastructure.csproj", "{BFC2A50E-CF92-4817-9171-CF1AF7E1AF3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Application", "PhysicalPersonDirectory.Application\PhysicalPersonDirectory.Application.csproj", "{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{BFC2A50E-CF92-4817-9171-CF1AF7E1AF3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFC2A50E-CF92-4817-9171-CF1AF7E1AF3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFC2A50E-CF92-4817-9171-CF1AF7E1AF3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
