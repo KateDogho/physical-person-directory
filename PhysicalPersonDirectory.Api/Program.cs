@@ -1,5 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using PhysicalPersonDirectory.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using PhysicalPersonDirectory.Application;
+using PhysicalPersonDirectory.Domain.Repositories;
+using PhysicalPersonDirectory.Domain.Shared.Repositories;
+using PhysicalPersonDirectory.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,10 @@ builder.Services.AddDbContext<PhysicalPersonDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString"));
 });
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplication).Assembly));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

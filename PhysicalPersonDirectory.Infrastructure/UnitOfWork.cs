@@ -1,44 +1,60 @@
+using Microsoft.EntityFrameworkCore;
+using PhysicalPersonDirectory.Domain.Shared.Repositories;
+using PhysicalPersonDirectory.Infrastructure.Repositories;
+
 namespace PhysicalPersonDirectory.Infrastructure;
 
-
-public class UnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly PhysicalPersonDbContext _db;
-
+    
     public UnitOfWork(PhysicalPersonDbContext db)
     {
         _db = db;
     }
-
-    public void Save(bool useTransaction = true)
+    
+    public void Commit()
     {
-        if (useTransaction)
+        _db.SaveChanges();
+    }
+    public void Rollback()
+    {
+        foreach (var entry in _db.ChangeTracker.Entries())
         {
-            using var transaction = _db.Database.BeginTransaction();
-
-            _db.SaveChanges();
-
-            transaction.Commit();
-        }
-        else
-        {
-            _db.SaveChanges();
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.State = EntityState.Detached;
+                    break;
+            }
         }
     }
-
-    public async Task SaveAsync(bool useTransaction = true)
+    public IRepository<T> Repository<T>() where T : class
     {
-        if (useTransaction)
-        {
-            await using var transaction = await _db.Database.BeginTransactionAsync();
+        return new EfBaseRepository<T>(_db);
+    }
 
-            await _db.SaveChangesAsync();
+    public Task<int> CommitAsync(CancellationToken cancellationToken)
+    {
+        return _db.SaveChangesAsync(cancellationToken);
+    }
 
-            await transaction.CommitAsync();
-        }
-        else
+    private bool _disposed = false;
+    
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
         {
-            await _db.SaveChangesAsync();
+            if (disposing)
+            {
+                _db.Dispose();
+            }
         }
+        _disposed = true;
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -9,7 +9,7 @@ public class EfBaseRepository<TAggregateRoot> : IRepository<TAggregateRoot>
     {
         private readonly PhysicalPersonDbContext _dbContext;
 
-        protected EfBaseRepository(PhysicalPersonDbContext dbContext)
+        public EfBaseRepository(PhysicalPersonDbContext dbContext)
         {
             _dbContext = dbContext;
         }

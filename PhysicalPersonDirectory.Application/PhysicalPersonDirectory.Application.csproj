@@ -6,4 +6,19 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\.nuget\packages\mediatr\12.1.1\lib\net6.0\MediatR.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PhysicalPersonDirectory.Domain\PhysicalPersonDirectory.Domain.csproj" />
+      <ProjectReference Include="..\PhysicalPersonDirectory.Infrastructure\PhysicalPersonDirectory.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

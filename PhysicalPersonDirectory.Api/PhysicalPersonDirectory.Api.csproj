@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
@@ -25,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PhysicalPersonDirectory.Application\PhysicalPersonDirectory.Application.csproj" />
       <ProjectReference Include="..\PhysicalPersonDirectory.Infrastructure\PhysicalPersonDirectory.Infrastructure.csproj" />
     </ItemGroup>
 
