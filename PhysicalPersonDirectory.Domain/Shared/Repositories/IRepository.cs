@@ -7,7 +7,9 @@ public interface IRepository<TAggregateRoot> where TAggregateRoot : class
     TAggregateRoot? OfId(int id);
 
     void Delete(TAggregateRoot aggregateRoot);
-
+    
+    void Delete(IEnumerable<TAggregateRoot> aggregateRoot);
+    
     void Insert(TAggregateRoot aggregateRoot);
 
     void Insert(IEnumerable<TAggregateRoot> aggregateRoot);

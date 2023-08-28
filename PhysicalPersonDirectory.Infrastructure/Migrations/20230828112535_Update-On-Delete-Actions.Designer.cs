@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhysicalPersonDirectory.Infrastructure;
 
@@ -11,9 +12,11 @@ using PhysicalPersonDirectory.Infrastructure;
 namespace PhysicalPersonDirectory.Infrastructure.Migrations
 {
     [DbContext(typeof(PhysicalPersonDbContext))]
-    partial class PhysicalPersonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230828112535_Update-On-Delete-Actions")]
+    partial class UpdateOnDeleteActions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

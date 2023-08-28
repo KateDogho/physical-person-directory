@@ -16,7 +16,7 @@ public class PhysicalPersonsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost()]
+    [HttpPost]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
@@ -28,19 +28,34 @@ public class PhysicalPersonsController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPost("UploadFile")]
-    [ProducesResponseType(typeof(UploadFileCommandResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(UploadFileCommandResult), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(UploadFileCommandResult), StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(typeof(UploadFileCommandResult), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UploadFile([FromForm]UploadFileCommand command)
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdatePhysicalPersonCommand command)
     {
+        command.Id = id;
+        
         var result = await _mediator.Send(command);
 
         return Ok(result);
     }
     
-    [HttpGet()]
+    [HttpPost("{id}/UploadImage")]
+    [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UploadImage(int id, [FromForm]UploadImageCommand command)
+    {
+        command.Id = id;
+        var result = await _mediator.Send(command);
+
+        return Ok(result);
+    }
+    
+    [HttpGet]
     [ProducesResponseType(typeof(PhysicalPersonsQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PhysicalPersonsQueryResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PhysicalPersonsQueryResult), StatusCodes.Status401Unauthorized)]
@@ -52,7 +67,7 @@ public class PhysicalPersonsController : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(PhysicalPersonDetailsQueryResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PhysicalPersonDetailsQueryResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(PhysicalPersonDetailsQueryResult), StatusCodes.Status401Unauthorized)]
@@ -60,6 +75,43 @@ public class PhysicalPersonsController : ControllerBase
     public async Task<IActionResult> GetDetails(int id)
     {
         var result = await _mediator.Send(new PhysicalPersonDetailsQuery(id));
+
+        return Ok(result);
+    }
+    
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _mediator.Send(new DeletePhysicalPersonCommand(id));
+
+        return Ok(result);
+    }
+    
+    [HttpPost("{id}/AddRelatedPerson")]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DeletePhysicalPersonCommandResult), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddRelatedPerson(int id)
+    {
+        var result = await _mediator.Send(new DeletePhysicalPersonCommand(id));
+
+        return Ok(result);
+    }
+    
+    
+    [HttpGet("RelatedPersonsReport")]
+    [ProducesResponseType(typeof(RelatedPhysicalPersonsReportQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RelatedPhysicalPersonsReportQueryResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(RelatedPhysicalPersonsReportQueryResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(RelatedPhysicalPersonsReportQueryResult), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RelatedPersonsReport()
+    {
+        var result = await _mediator.Send(new RelatedPhysicalPersonsReportQuery());
 
         return Ok(result);
     }

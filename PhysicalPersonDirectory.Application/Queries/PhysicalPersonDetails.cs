@@ -21,7 +21,7 @@ public class
         _configuration = configuration;
     }
 
-    public async Task<PhysicalPersonDetailsQueryResult> Handle(PhysicalPersonDetailsQuery request,
+    public Task<PhysicalPersonDetailsQueryResult> Handle(PhysicalPersonDetailsQuery request,
         CancellationToken cancellationToken)
     {
         var physicalPerson = _physicalPersonRepository.Query(pp => pp.Id == request.Id)
@@ -35,7 +35,7 @@ public class
 
         var imageBaseUrl = _configuration["ImageSettings:ImageBaseUrl"];
 
-        return new PhysicalPersonDetailsQueryResult()
+        return Task.FromResult(new PhysicalPersonDetailsQueryResult()
         {
             Id = physicalPerson.Id,
             FirstName = physicalPerson.FirstName,
@@ -58,7 +58,7 @@ public class
                     LastName = rrp.RelatedPerson.LastName,
                     Type = rrp.RelationType
                 }).ToArray()
-        };
+        });
     }
 }
 
@@ -86,6 +86,4 @@ public record PhysicalPersonDetailsQueryResult
         Array.Empty<RelatedPhysicalPersonModel>();
 }
 
-public record PhysicalPersonDetailsQuery(int Id) : IRequest<PhysicalPersonDetailsQueryResult>
-{
-}
+public record PhysicalPersonDetailsQuery(int Id) : IRequest<PhysicalPersonDetailsQueryResult>;

@@ -13,6 +13,9 @@
       <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
         <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.AspNetCore.Http">
+        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.AspNetCore.Http.Features">
         <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.Features.dll</HintPath>
       </Reference>

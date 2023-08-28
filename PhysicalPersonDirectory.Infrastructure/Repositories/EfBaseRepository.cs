@@ -18,6 +18,11 @@ public class EfBaseRepository<TAggregateRoot> : IRepository<TAggregateRoot>
         {
             _dbContext.Set<TAggregateRoot>().Remove(aggregateRoot);
         }
+        
+        public virtual void Delete(IEnumerable<TAggregateRoot> aggregateRoot)
+        {
+            _dbContext.Set<TAggregateRoot>().RemoveRange(aggregateRoot);
+        }
 
         public TAggregateRoot? OfId(int id)
         {

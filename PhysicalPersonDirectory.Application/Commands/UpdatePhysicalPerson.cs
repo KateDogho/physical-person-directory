@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using MediatR;
 using PhysicalPersonDirectory.Application.Models;
 using PhysicalPersonDirectory.Domain;
@@ -7,13 +8,13 @@ using PhysicalPersonDirectory.Domain.Shared.Repositories;
 namespace PhysicalPersonDirectory.Application.Commands;
 
 public class
-    CreatePhysicalPersonCommandHandler : IRequestHandler<CreatePhysicalPersonCommand, CreatePhysicalPersonCommandResult>
+    UpdatePhysicalPersonCommandHandler : IRequestHandler<UpdatePhysicalPersonCommand, UpdatePhysicalPersonCommandResult>
 {
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly ICityRepository _cityRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreatePhysicalPersonCommandHandler(
+    public UpdatePhysicalPersonCommandHandler(
         IPhysicalPersonRepository physicalPersonRepository,
         IUnitOfWork unitOfWork,
         ICityRepository cityRepository)
@@ -23,39 +24,44 @@ public class
         _cityRepository = cityRepository;
     }
 
-    public async Task<CreatePhysicalPersonCommandResult> Handle(CreatePhysicalPersonCommand request,
+    public async Task<UpdatePhysicalPersonCommandResult> Handle(UpdatePhysicalPersonCommand request,
         CancellationToken cancellationToken)
     {
+        var physicalPerson = _physicalPersonRepository.OfId(request.Id);
+        
+        if (physicalPerson is null)
+            throw new ArgumentException("Physical person not found");
+        
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
             throw new ArgumentException("City not found");
 
-        var physicalPerson = new PhysicalPerson
+        physicalPerson.FirstName = request.FirstName;
+        physicalPerson.LastName = request.LastName;
+        physicalPerson.Gender = request.Gender;
+        physicalPerson.IdentificationNumber = request.IdentificationNumber;
+        physicalPerson.DateOfBirth = request.DateOfBirth;
+        physicalPerson.City = city;
+        physicalPerson.PhoneNumbers = request.PhoneNumbers.Select(pn => new PhoneNumber
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Gender = request.Gender,
-            IdentificationNumber = request.IdentificationNumber,
-            DateOfBirth = request.DateOfBirth,
-            City = city,
-            PhoneNumbers = request.PhoneNumbers.Select(pn => new PhoneNumber
-            {
-                Type = pn.Type,
-                Number = pn.Number
-            }).ToList(),
-            ImagePath = request.ImageName
-        };
+            Type = pn.Type,
+            Number = pn.Number
+        }).ToList();
+        physicalPerson.ImagePath = request.ImageName;
 
-        _physicalPersonRepository.Update(physicalPerson);
+        _physicalPersonRepository.Insert(physicalPerson);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        return new CreatePhysicalPersonCommandResult(physicalPerson.Id);
+        return new UpdatePhysicalPersonCommandResult(physicalPerson.Id);
     }
 }
 
-public record CreatePhysicalPersonCommand : IRequest<CreatePhysicalPersonCommandResult>
+public record UpdatePhysicalPersonCommand : IRequest<UpdatePhysicalPersonCommandResult>
 {
+    [NotMapped]
+    public int Id { get; set; }
+    
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
@@ -73,4 +79,4 @@ public record CreatePhysicalPersonCommand : IRequest<CreatePhysicalPersonCommand
     public string? ImageName { get; set; }
 }
 
-public record CreatePhysicalPersonCommandResult(int Id);
+public record UpdatePhysicalPersonCommandResult(int Id);

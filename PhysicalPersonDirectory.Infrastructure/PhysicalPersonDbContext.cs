@@ -16,8 +16,16 @@ public class PhysicalPersonDbContext : DbContext
             .HasMany(pp => pp.RelatedPhysicalPersons)
             .WithOne(rp => rp.TargetPerson)
             .HasForeignKey(rp => rp.TargetPersonId)
-            .OnDelete(DeleteBehavior.ClientCascade);
-
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<PhysicalPerson>()
+            .HasOne(entity => entity.City)
+            .WithMany()
+            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<PhysicalPerson>()
+            .HasMany(entity => entity.PhoneNumbers)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+        
         modelBuilder.Entity<City>().ToTable("Cities")
             .HasData(new()
             {
@@ -44,16 +52,10 @@ public class PhysicalPersonDbContext : DbContext
             .HasKey(rrp => new { SourcePersonId = rrp.TargetPersonId, rrp.RelatedPersonId });
 
         modelBuilder.Entity<RelatedPhysicalPerson>()
-            .HasOne(rpp => rpp.TargetPerson)
-            .WithMany(pp => pp.RelatedPhysicalPersons)
-            .HasForeignKey(rpp => rpp.TargetPersonId)
-            .OnDelete(DeleteBehavior.ClientCascade);
-        
-        modelBuilder.Entity<RelatedPhysicalPerson>()
             .HasOne(rpp => rpp.RelatedPerson)
             .WithMany()
             .HasForeignKey(rpp => rpp.RelatedPersonId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         base.OnModelCreating(modelBuilder);
     }
