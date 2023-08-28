@@ -28,12 +28,12 @@ public class
             .FirstOrDefault();
 
         if (physicalPerson is null)
-            throw new ArgumentException("Physical person not found");
+            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
 
         var relatedPerson =
             physicalPerson.RelatedPhysicalPersons.FirstOrDefault(pp => pp.RelatedPersonId == request.RelatedPersonId);
         if (relatedPerson is null)
-            throw new ArgumentException("Related person not found");
+            throw new ArgumentException(Resources.RelatedPersonNotFoundException);
 
         physicalPerson.RelatedPhysicalPersons.Remove(relatedPerson);
 

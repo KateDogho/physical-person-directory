@@ -1,5 +1,6 @@
 using PhysicalPersonDirectory.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using PhysicalPersonDirectory.Api.Middlewares;
 using PhysicalPersonDirectory.Application;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
@@ -33,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionLoggingMiddleware>();
 
 app.UseStaticFiles();
 

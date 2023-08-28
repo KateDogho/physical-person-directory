@@ -23,10 +23,10 @@ public class UploadImageCommandHandler : IRequestHandler<UploadImageCommand, Upl
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
 
         if (physicalPerson is null)
-            throw new InvalidEnumArgumentException("Physical person not found");
+            throw new InvalidEnumArgumentException(Resources.PhysicalPersonNotFoundException);
 
         if (string.IsNullOrEmpty(request.Image.FileName))
-            throw new InvalidEnumArgumentException("Image can't be uploaded");
+            throw new InvalidEnumArgumentException(Resources.ImageCannotBeUploadedException);
 
         if (!string.IsNullOrEmpty(physicalPerson.ImagePath))
         {

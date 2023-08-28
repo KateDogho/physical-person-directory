@@ -30,12 +30,12 @@ public class
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
         
         if (physicalPerson is null)
-            throw new ArgumentException("Physical person not found");
+            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
         
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
-            throw new ArgumentException("City not found");
+            throw new ArgumentException(Resources.CityNotFoundException);
 
         physicalPerson.FirstName = request.FirstName;
         physicalPerson.LastName = request.LastName;

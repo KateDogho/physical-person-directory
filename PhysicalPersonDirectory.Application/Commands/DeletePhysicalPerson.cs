@@ -27,7 +27,7 @@ public class
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
 
         if (physicalPerson is null)
-            throw new ArgumentException("Physical Person not found");
+            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
 
         var relatedPhysicalPersons =
             _relatedPhysicalPersonRepository.Query(rpp => rpp.TargetPersonId == physicalPerson.Id);

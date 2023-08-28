@@ -31,7 +31,7 @@ public class
             .FirstOrDefault();
 
         if (physicalPerson is null)
-            throw new InvalidEnumArgumentException("Physical Person not found");
+            throw new InvalidEnumArgumentException(Resources.PhysicalPersonNotFoundException);
 
         var imageBaseUrl = _configuration["ImageSettings:ImageBaseUrl"];
 

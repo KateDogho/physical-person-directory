@@ -29,7 +29,7 @@ public class
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
-            throw new ArgumentException("City not found");
+            throw new ArgumentException(Resources.CityNotFoundException);
 
         var physicalPerson = new PhysicalPerson
         {

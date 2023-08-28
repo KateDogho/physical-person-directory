@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PhysicalPersonDirectory.Api.ActionFilters;
 using PhysicalPersonDirectory.Application.Commands;
 using PhysicalPersonDirectory.Application.Queries;
 
@@ -17,6 +18,7 @@ public class PhysicalPersonsController : ControllerBase
     }
 
     [HttpPost]
+    [ValidateParameters]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CreatePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
@@ -29,6 +31,7 @@ public class PhysicalPersonsController : ControllerBase
     }
     
     [HttpPut("{id}")]
+    [ValidateParameters]
     [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status401Unauthorized)]
