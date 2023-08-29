@@ -29,7 +29,7 @@ public class
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
-            throw new ArgumentException(Resources.CityNotFoundException);
+            throw new ArgumentException(Resources.Resources.CityNotFoundException);
 
         var physicalPerson = new PhysicalPerson
         {
@@ -43,8 +43,7 @@ public class
             {
                 Type = pn.Type,
                 Number = pn.Number
-            }).ToList(),
-            ImagePath = request.ImageName
+            }).ToList()
         };
 
         _physicalPersonRepository.Update(physicalPerson);
@@ -69,8 +68,6 @@ public record CreatePhysicalPersonCommand : IRequest<CreatePhysicalPersonCommand
     public int CityId { get; set; }
 
     public string IdentificationNumber { get; set; } = string.Empty;
-    
-    public string? ImageName { get; set; }
 }
 
 public record CreatePhysicalPersonCommandResult(int Id);

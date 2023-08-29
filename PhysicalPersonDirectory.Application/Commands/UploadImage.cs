@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using PhysicalPersonDirectory.Application.Services.Abstract;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
@@ -10,11 +11,15 @@ public class UploadImageCommandHandler : IRequestHandler<UploadImageCommand, Upl
 {
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IImageService _imageService;
 
-    public UploadImageCommandHandler(IPhysicalPersonRepository physicalPersonRepository, IUnitOfWork unitOfWork)
+    public UploadImageCommandHandler(IPhysicalPersonRepository physicalPersonRepository,
+        IUnitOfWork unitOfWork, 
+        IImageService imageService)
     {
         _physicalPersonRepository = physicalPersonRepository;
         _unitOfWork = unitOfWork;
+        _imageService = imageService;
     }
 
     public async Task<UploadImageCommandResult> Handle(UploadImageCommand request,
@@ -23,29 +28,19 @@ public class UploadImageCommandHandler : IRequestHandler<UploadImageCommand, Upl
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
 
         if (physicalPerson is null)
-            throw new InvalidEnumArgumentException(Resources.PhysicalPersonNotFoundException);
+            throw new InvalidEnumArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
 
         if (string.IsNullOrEmpty(request.Image.FileName))
-            throw new InvalidEnumArgumentException(Resources.ImageCannotBeUploadedException);
+            throw new InvalidEnumArgumentException(Resources.Resources.ImageCannotBeUploadedException);
 
         if (!string.IsNullOrEmpty(physicalPerson.ImagePath))
         {
-            var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/", physicalPerson.ImagePath);
-            var file = new FileInfo(oldPath);
-            if (file.Exists)
-            {
-                file.Delete();
-            }
+            _imageService.DeleteImage(physicalPerson.ImagePath);
         }
 
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/", request.Image.FileName);
-
-        await using var stream = new FileStream(path, FileMode.Create);
-
-        await request.Image.CopyToAsync(stream, cancellationToken);
-        stream.Close();
-
-        physicalPerson.ImagePath = request.Image.FileName;
+        var fileName = await _imageService.SaveImage(request.Image, cancellationToken);
+        
+        physicalPerson.ImagePath = fileName;
 
         _physicalPersonRepository.Update(physicalPerson);
         await _unitOfWork.CommitAsync(cancellationToken);

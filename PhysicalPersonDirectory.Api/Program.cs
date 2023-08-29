@@ -1,10 +1,16 @@
+using FluentValidation;
 using PhysicalPersonDirectory.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using PhysicalPersonDirectory.Api.Middlewares;
+using PhysicalPersonDirectory.Api.OperationFilters;
 using PhysicalPersonDirectory.Application;
+using PhysicalPersonDirectory.Application.Services.Abstract;
+using PhysicalPersonDirectory.Application.Services.Concrete;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 using PhysicalPersonDirectory.Infrastructure.Repositories;
+using PhysicalPersonDirectory.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,13 +24,25 @@ builder.Services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>(
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
 builder.Services.AddScoped<IRelatedPhysicalPersonRepository, RelatedPhysicalPersonRepository>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplication).Assembly));
 
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "PhysicalPersonDirectory.Application.Resources";
+});
+
 builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreatePhysicalPersonValidator));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Physical Person Directory", Version = "v1" });
+    options.OperationFilter<CustomHeaderOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -35,7 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionLoggingMiddleware>();
+app.UseMiddleware<GlobalErrorHandlingMiddleware>();
+app.UseMiddleware<LocalizationMiddleware>();
 
 app.UseStaticFiles();
 

@@ -28,14 +28,14 @@ public class
                                                                     || pp.Id == request.RelatedPersonId);
 
         if (!physicalPersons.Any(pp => pp.Id != request.Id))
-            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
+            throw new ArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
 
         if (!physicalPersons.Any(pp => pp.Id != request.RelatedPersonId))
-            throw new ArgumentException(Resources.RelatedPersonNotFoundException);
+            throw new ArgumentException(Resources.Resources.RelatedPersonNotFoundException);
 
         var target = physicalPersons.First(pp => pp.Id == request.Id);
         if (target.RelatedPhysicalPersons.All(rpp => rpp.RelatedPersonId != request.RelatedPersonId))
-            throw new ArgumentException(Resources.RelatedPersonAlreadyExistsException);
+            throw new ArgumentException(Resources.Resources.RelatedPersonAlreadyExistsException);
 
         var relatedPerson = physicalPersons.First(pp => pp.Id == request.RelatedPersonId);
         target.RelatedPhysicalPersons.Add(new RelatedPhysicalPerson

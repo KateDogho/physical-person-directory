@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PhysicalPersonDirectory.Application {
+namespace PhysicalPersonDirectory.Application.Resources {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class Resources_en_US {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Resources_en_US() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("PhysicalPersonDirectory.Application.Resources", typeof(Resources).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("PhysicalPersonDirectory.Application.Resources.Resources_en_US", typeof(Resources_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,9 +45,9 @@ namespace PhysicalPersonDirectory.Application {
             }
         }
         
-        internal static string PhoneNumberValidator_PhoneNumber {
+        internal static string CityNotFoundException {
             get {
-                return ResourceManager.GetString("PhoneNumberValidator_PhoneNumber", resourceCulture);
+                return ResourceManager.GetString("CityNotFoundException", resourceCulture);
             }
         }
         
@@ -69,21 +69,15 @@ namespace PhysicalPersonDirectory.Application {
             }
         }
         
-        internal static string UpdatePhysicalPersonValidator_FirstName {
+        internal static string ImageCannotBeUploadedException {
             get {
-                return ResourceManager.GetString("UpdatePhysicalPersonValidator_FirstName", resourceCulture);
+                return ResourceManager.GetString("ImageCannotBeUploadedException", resourceCulture);
             }
         }
         
-        internal static string UpdatePhysicalPersonValidator_FirstName_Regex {
+        internal static string PhoneNumberValidator_PhoneNumber {
             get {
-                return ResourceManager.GetString("UpdatePhysicalPersonValidator_FirstName_Regex", resourceCulture);
-            }
-        }
-        
-        internal static string UpdatePhysicalPersonValidator_IdentificationNumber {
-            get {
-                return ResourceManager.GetString("UpdatePhysicalPersonValidator_IdentificationNumber", resourceCulture);
+                return ResourceManager.GetString("PhoneNumberValidator_PhoneNumber", resourceCulture);
             }
         }
         
@@ -93,27 +87,33 @@ namespace PhysicalPersonDirectory.Application {
             }
         }
         
-        internal static string RelatedPersonNotFoundException {
-            get {
-                return ResourceManager.GetString("RelatedPersonNotFoundException", resourceCulture);
-            }
-        }
-        
         internal static string RelatedPersonAlreadyExistsException {
             get {
                 return ResourceManager.GetString("RelatedPersonAlreadyExistsException", resourceCulture);
             }
         }
         
-        internal static string CityNotFoundException {
+        internal static string UpdatePhysicalPersonValidator_FirstName {
             get {
-                return ResourceManager.GetString("CityNotFoundException", resourceCulture);
+                return ResourceManager.GetString("UpdatePhysicalPersonValidator_FirstName", resourceCulture);
             }
         }
         
-        internal static string ImageCannotBeUploadedException {
+        internal static string RelatedPersonNotFoundException {
             get {
-                return ResourceManager.GetString("ImageCannotBeUploadedException", resourceCulture);
+                return ResourceManager.GetString("RelatedPersonNotFoundException", resourceCulture);
+            }
+        }
+        
+        internal static string UpdatePhysicalPersonValidator_IdentificationNumber {
+            get {
+                return ResourceManager.GetString("UpdatePhysicalPersonValidator_IdentificationNumber", resourceCulture);
+            }
+        }
+        
+        internal static string UpdatePhysicalPersonValidator_FirstName_Regex {
+            get {
+                return ResourceManager.GetString("UpdatePhysicalPersonValidator_FirstName_Regex", resourceCulture);
             }
         }
     }

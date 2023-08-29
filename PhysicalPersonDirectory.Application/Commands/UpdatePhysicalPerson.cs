@@ -30,12 +30,12 @@ public class
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
         
         if (physicalPerson is null)
-            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
+            throw new ArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
         
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
-            throw new ArgumentException(Resources.CityNotFoundException);
+            throw new ArgumentException(Resources.Resources.CityNotFoundException);
 
         physicalPerson.FirstName = request.FirstName;
         physicalPerson.LastName = request.LastName;
@@ -48,7 +48,6 @@ public class
             Type = pn.Type,
             Number = pn.Number
         }).ToList();
-        physicalPerson.ImagePath = request.ImageName;
 
         _physicalPersonRepository.Insert(physicalPerson);
         await _unitOfWork.CommitAsync(cancellationToken);
@@ -75,8 +74,6 @@ public record UpdatePhysicalPersonCommand : IRequest<UpdatePhysicalPersonCommand
     public int CityId { get; set; }
 
     public string IdentificationNumber { get; set; } = string.Empty;
-    
-    public string? ImageName { get; set; }
 }
 
 public record UpdatePhysicalPersonCommandResult(int Id);

@@ -12,7 +12,7 @@ public class PhoneNumberValidator : AbstractValidator<PhoneNumberModel>
             .NotEmpty()
             .MinimumLength(4)
             .MaximumLength(50)
-            .WithMessage(Resources.PhoneNumberValidator_PhoneNumber);
+            .WithMessage(Resources.Resources.PhoneNumberValidator_PhoneNumber);
         ;
     }
 }

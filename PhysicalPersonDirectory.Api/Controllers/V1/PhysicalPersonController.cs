@@ -30,7 +30,7 @@ public class PhysicalPersonsController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [ValidateParameters]
     [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UpdatePhysicalPersonCommandResult), StatusCodes.Status400BadRequest)]
@@ -45,7 +45,7 @@ public class PhysicalPersonsController : ControllerBase
         return Ok(result);
     }
     
-    [HttpPost("{id}/UploadImage")]
+    [HttpPost("{id:int}/UploadImage")]
     [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(UploadImageCommandResult), StatusCodes.Status401Unauthorized)]

@@ -12,24 +12,24 @@ public class UpdatePhysicalPersonValidator : AbstractValidator<UpdatePhysicalPer
             .NotEmpty()
             .MinimumLength(2)
             .MaximumLength(50)
-            .WithMessage(Resources.UpdatePhysicalPersonValidator_FirstName);
+            .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_FirstName);
         RuleFor(x => x.FirstName)
             .Matches(@"^([a-zA-Z]+|[\u10A0-\u10FF]+)$")
-            .WithMessage(Resources.UpdatePhysicalPersonValidator_FirstName_Regex);
+            .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_FirstName_Regex);
         RuleFor(x => x.LastName)
             .NotNull()
             .NotEmpty()
             .MinimumLength(2)
             .MaximumLength(50)
-            .WithMessage(Resources.UpdatePhysicalPersonValidator_FirstName);
+            .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_FirstName);
         RuleFor(x => x.LastName)
             .Matches(@"^([a-zA-Z]+|[\u10A0-\u10FF]+)$")
-            .WithMessage(Resources.UpdatePhysicalPersonValidator_FirstName_Regex);
+            .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_FirstName_Regex);
         RuleFor(x => x.IdentificationNumber)
             .NotNull()
             .NotEmpty()
             .Length(11)
-            .WithMessage(Resources.UpdatePhysicalPersonValidator_IdentificationNumber);
+            .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_IdentificationNumber);
         ;
     }
 }

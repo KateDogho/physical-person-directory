@@ -1,4 +1,5 @@
 using MediatR;
+using PhysicalPersonDirectory.Application.Services.Abstract;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
@@ -10,15 +11,18 @@ public class
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IRelatedPhysicalPersonRepository _relatedPhysicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IImageService _imageService;
 
     public DeletePhysicalPersonCommandHandler(
         IPhysicalPersonRepository physicalPersonRepository,
         IUnitOfWork unitOfWork,
-        IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository)
+        IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository, 
+        IImageService imageService)
     {
         _physicalPersonRepository = physicalPersonRepository;
         _unitOfWork = unitOfWork;
         _relatedPhysicalPersonRepository = relatedPhysicalPersonRepository;
+        _imageService = imageService;
     }
 
     public async Task<DeletePhysicalPersonCommandResult> Handle(DeletePhysicalPersonCommand request,
@@ -27,11 +31,16 @@ public class
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
 
         if (physicalPerson is null)
-            throw new ArgumentException(Resources.PhysicalPersonNotFoundException);
+            throw new ArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
 
         var relatedPhysicalPersons =
             _relatedPhysicalPersonRepository.Query(rpp => rpp.TargetPersonId == physicalPerson.Id);
 
+        if (!string.IsNullOrEmpty(physicalPerson.ImagePath))
+        {
+            _imageService.DeleteImage(physicalPerson.ImagePath);
+        }
+        
         _physicalPersonRepository.Delete(physicalPerson);
         _relatedPhysicalPersonRepository.Delete(relatedPhysicalPersons);
 

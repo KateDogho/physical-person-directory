@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PhysicalPersonDirectory.Application.Models;
+using PhysicalPersonDirectory.Application.Services.Abstract;
 using PhysicalPersonDirectory.Domain;
 using PhysicalPersonDirectory.Domain.Repositories;
 
@@ -13,12 +14,15 @@ public class
 {
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IConfiguration _configuration;
+    private readonly IImageService _imageService;
 
     public PhysicalPersonDetailsQueryHandler(IPhysicalPersonRepository physicalPersonRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IImageService imageService)
     {
         _physicalPersonRepository = physicalPersonRepository;
         _configuration = configuration;
+        _imageService = imageService;
     }
 
     public Task<PhysicalPersonDetailsQueryResult> Handle(PhysicalPersonDetailsQuery request,
@@ -31,9 +35,7 @@ public class
             .FirstOrDefault();
 
         if (physicalPerson is null)
-            throw new InvalidEnumArgumentException(Resources.PhysicalPersonNotFoundException);
-
-        var imageBaseUrl = _configuration["ImageSettings:ImageBaseUrl"];
+            throw new InvalidEnumArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
 
         return Task.FromResult(new PhysicalPersonDetailsQueryResult()
         {
@@ -49,7 +51,7 @@ public class
                 pn.Number
             )).ToArray(),
             ImagePath = !string.IsNullOrEmpty(physicalPerson.ImagePath)
-                ? Path.Combine(imageBaseUrl, physicalPerson.ImagePath)
+                ? _imageService.GetImageUrl(physicalPerson.ImagePath)
                 : null,
             RelatedPhysicalPersons = physicalPerson.RelatedPhysicalPersons.Select(rrp =>
                 new RelatedPhysicalPersonModel
