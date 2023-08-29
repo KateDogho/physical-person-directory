@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Inf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Application", "PhysicalPersonDirectory.Application\PhysicalPersonDirectory.Application.csproj", "{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3E3F219B-63C3-498E-9706-9DD8185B6036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysicalPersonDirectory.Tests.Unit", "PhysicalPersonDirectory.Tests.Unit\PhysicalPersonDirectory.Tests.Unit.csproj", "{3F221781-ED36-430C-975C-DC4DD57863C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,12 @@ Global
 		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B9DE5CC-58A7-4194-89C8-3CBA422DCDD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F221781-ED36-430C-975C-DC4DD57863C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F221781-ED36-430C-975C-DC4DD57863C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F221781-ED36-430C-975C-DC4DD57863C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F221781-ED36-430C-975C-DC4DD57863C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3F221781-ED36-430C-975C-DC4DD57863C9} = {3E3F219B-63C3-498E-9706-9DD8185B6036}
 	EndGlobalSection
 EndGlobal

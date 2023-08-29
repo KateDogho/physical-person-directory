@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Reference Include="JetBrains.ReSharper.TestRunner.Abstractions">
+        <HintPath>..\..\..\..\..\Applications\Rider.app\Contents\lib\ReSharperHost\TestRunner\netcoreapp3.0\JetBrains.ReSharper.TestRunner.Abstractions.dll</HintPath>
+      </Reference>
       <Reference Include="MediatR">
         <HintPath>..\..\..\.nuget\packages\mediatr\12.1.1\lib\net6.0\MediatR.dll</HintPath>
       </Reference>
@@ -19,11 +22,15 @@
       <Reference Include="Microsoft.AspNetCore.Http.Features">
         <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.Features.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
+        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.7.1" />
       <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+      <PackageReference Include="System.IO.Abstractions" Version="19.2.67" />
     </ItemGroup>
 
     <ItemGroup>

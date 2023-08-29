@@ -24,6 +24,7 @@ builder.Services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>(
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
 builder.Services.AddScoped<IRelatedPhysicalPersonRepository, RelatedPhysicalPersonRepository>();
+builder.Services.AddScoped<IFileStreamService, FileStreamService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplication).Assembly));

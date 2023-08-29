@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.IO.Abstractions;
 using PhysicalPersonDirectory.Application.Services.Abstract;
 
 namespace PhysicalPersonDirectory.Application.Services.Concrete;
@@ -8,23 +9,27 @@ namespace PhysicalPersonDirectory.Application.Services.Concrete;
 public class ImageService : IImageService
 {
     private readonly IConfiguration _configuration;
+    private readonly IFileInfoFactory _fileInfoFactory;
+    private readonly IFileStreamService _fileStreamService;
 
-    public ImageService(IConfiguration configuration)
+    public ImageService(IConfiguration configuration, IFileInfoFactory fileInfoFactory,
+        IFileStreamService fileStreamService)
     {
         _configuration = configuration;
+        _fileInfoFactory = fileInfoFactory;
+        _fileStreamService = fileStreamService;
     }
-    
+
     public async Task<string> SaveImage(IFormFile image, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(image.FileName))
             throw new InvalidEnumArgumentException(Resources.Resources.ImageCannotBeUploadedException);
 
         var path = GetImagePath(image.FileName);
-        
-        await using var stream = new FileStream(path, FileMode.Create);
 
-        await image.CopyToAsync(stream, cancellationToken);
-        stream.Close();
+        await using var stream = _fileStreamService.CreateFileStream(path, FileMode.Create);
+
+        await _fileStreamService.CopyImageToStreamAsync(image, stream, cancellationToken);
 
         return image.FileName;
     }
@@ -32,10 +37,10 @@ public class ImageService : IImageService
     public void DeleteImage(string fileName)
     {
         var path = GetImagePath(fileName);
-        var file = new FileInfo(path);
-        if (file.Exists)
+        var fileInfo = _fileInfoFactory.New(path);
+        if (fileInfo.Exists)
         {
-            file.Delete();
+            fileInfo.Delete();
         }
         else
         {
@@ -49,10 +54,10 @@ public class ImageService : IImageService
 
         if (string.IsNullOrEmpty(imageBaseUrl))
             throw new InvalidOperationException("Image Base Url isn't configured");
-        
+
         return Path.Combine(imageBaseUrl, fileName);
     }
-    
+
     private static string GetImagePath(string fileName) =>
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/", fileName);
 }
