@@ -1,6 +1,7 @@
 using MediatR;
 using PhysicalPersonDirectory.Application.Models;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhoneNumberManagement;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
@@ -9,8 +10,8 @@ namespace PhysicalPersonDirectory.Application.Commands;
 public class
     CreatePhysicalPersonCommandHandler : IRequestHandler<CreatePhysicalPersonCommand, CreatePhysicalPersonCommandResult>
 {
-    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly ICityRepository _cityRepository;
+    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreatePhysicalPersonCommandHandler(
@@ -46,8 +47,8 @@ public class
             }).ToList()
         };
 
-        _physicalPersonRepository.Update(physicalPerson);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        _physicalPersonRepository.Insert(physicalPerson);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return new CreatePhysicalPersonCommandResult(physicalPerson.Id);
     }

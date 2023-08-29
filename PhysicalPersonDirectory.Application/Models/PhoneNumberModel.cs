@@ -1,4 +1,5 @@
 using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhoneNumberManagement;
 
 namespace PhysicalPersonDirectory.Application.Models;
 

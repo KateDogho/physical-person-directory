@@ -1,20 +1,26 @@
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using PhysicalPersonDirectory.Application.Models;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Application.Services.Abstract;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 
 namespace PhysicalPersonDirectory.Application.Queries;
 
 public class PhysicalPersonsQueryHandler : IRequestHandler<PhysicalPersonsQuery, PhysicalPersonsQueryResult>
 {
-    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IConfiguration _configuration;
+    private readonly IImageService _imageService;
+    private readonly IPhysicalPersonRepository _physicalPersonRepository;
+    private readonly IRelatedPhysicalPersonRepository _relatedPhysicalPersonRepository;
 
-    public PhysicalPersonsQueryHandler(IPhysicalPersonRepository physicalPersonRepository, IConfiguration configuration)
+    public PhysicalPersonsQueryHandler(IPhysicalPersonRepository physicalPersonRepository, IConfiguration configuration,
+        IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository, IImageService imageService)
     {
         _physicalPersonRepository = physicalPersonRepository;
         _configuration = configuration;
+        _relatedPhysicalPersonRepository = relatedPhysicalPersonRepository;
+        _imageService = imageService;
     }
 
     public Task<PhysicalPersonsQueryResult> Handle(PhysicalPersonsQuery request,
@@ -46,14 +52,32 @@ public class PhysicalPersonsQueryHandler : IRequestHandler<PhysicalPersonsQuery,
             physicalPersons =
                 physicalPersons.Where(pp => pp.PhoneNumbers.Any(pn => pn.Number.Contains(request.PhoneNumber)));
 
-        physicalPersons = physicalPersons
-            .Skip(request.PageSize * (request.Page - 1))
-            .Take(request.PageSize);
+        var pageSize = request.PageSize ?? 25;
+        var page = request.Page ?? 1;
+
+        var physicalPersonsResult = physicalPersons
+            .Skip(pageSize * (page - 1))
+            .Take(pageSize)
+            .ToList();
 
         var imageBaseUrl = _configuration["ImageSettings:ImageBaseUrl"];
-        return Task.FromResult(new PhysicalPersonsQueryResult()
+
+        var physicalPersonIds = physicalPersonsResult.Select(pp => pp.Id).ToArray();
+
+        var relatedPhysicalPersons = _relatedPhysicalPersonRepository
+            .Query(rpp => physicalPersonIds.Contains(rpp.TargetPersonId))
+            .Select(rrp =>
+                new
+                {
+                    rrp.TargetPersonId,
+                    rrp.RelatedPerson.FirstName,
+                    rrp.RelatedPerson.LastName,
+                    Type = rrp.RelationType
+                }).ToArray();
+
+        return Task.FromResult(new PhysicalPersonsQueryResult
         {
-            PhysicalPersons = physicalPersons.Select(pp => new PhysicalPersonsQueryResult.PhysicalPerson
+            PhysicalPersons = physicalPersonsResult.Select(pp => new PhysicalPersonsQueryResult.PhysicalPerson
             {
                 Id = pp.Id,
                 FirstName = pp.FirstName,
@@ -67,21 +91,22 @@ public class PhysicalPersonsQueryHandler : IRequestHandler<PhysicalPersonsQuery,
                     pn.Number
                 )).ToArray(),
                 ImagePath = !string.IsNullOrEmpty(pp.ImagePath)
-                    ? Path.Combine(imageBaseUrl, pp.ImagePath)
+                    ? _imageService.GetImageUrl(pp.ImagePath)
                     : null,
-                RelatedPhysicalPersons = pp.RelatedPhysicalPersons.Select(rrp =>
-                    new RelatedPhysicalPersonModel
-                    {
-                        FirstName = rrp.RelatedPerson.FirstName,
-                        LastName = rrp.RelatedPerson.LastName,
-                        Type = rrp.RelationType
-                    }).ToArray()
+                RelatedPhysicalPersons = relatedPhysicalPersons.Where(rpp => rpp.TargetPersonId == pp.Id)
+                    .Select(rpp =>
+                        new RelatedPhysicalPersonModel
+                        {
+                            FirstName = rpp.FirstName,
+                            LastName = rpp.LastName,
+                            Type = rpp.Type
+                        }).ToArray()
             }).ToArray()
         });
     }
 }
 
-public record PhysicalPersonsQuery(int PageSize, int Page, string? FirstName, string? LastName,
+public record PhysicalPersonsQuery(int? PageSize, int? Page, string? FirstName, string? LastName,
     string? IdentificationNumber, int? CityId, DateTime? StartDateOfBirth,
     DateTime? EndDateOfBirth, string? PhoneNumber) : IRequest<PhysicalPersonsQueryResult>;
 

@@ -116,5 +116,35 @@ namespace PhysicalPersonDirectory.Application.Resources {
                 return ResourceManager.GetString("ImageCannotBeUploadedException", resourceCulture);
             }
         }
+        
+        internal static string ImageDoesnExistException {
+            get {
+                return ResourceManager.GetString("ImageDoesnExistException", resourceCulture);
+            }
+        }
+        
+        internal static string ImageBaseUrlIsntConfiguredException {
+            get {
+                return ResourceManager.GetString("ImageBaseUrlIsntConfiguredException", resourceCulture);
+            }
+        }
+        
+        internal static string CreatePhysicalPersonValidator_LessThan18 {
+            get {
+                return ResourceManager.GetString("CreatePhysicalPersonValidator_LessThan18", resourceCulture);
+            }
+        }
+        
+        internal static string UpdatePhysicalPersonValidator_LessThan18Exception {
+            get {
+                return ResourceManager.GetString("UpdatePhysicalPersonValidator_LessThan18Exception", resourceCulture);
+            }
+        }
+        
+        internal static string RelationNotFoundException {
+            get {
+                return ResourceManager.GetString("RelationNotFoundException", resourceCulture);
+            }
+        }
     }
 }

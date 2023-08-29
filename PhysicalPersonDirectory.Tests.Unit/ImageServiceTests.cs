@@ -1,29 +1,29 @@
+using System.IO.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using PhysicalPersonDirectory.Application.Services.Concrete;
-using System.IO.Abstractions;
 using PhysicalPersonDirectory.Application.Services.Abstract;
+using PhysicalPersonDirectory.Application.Services.Concrete;
 
 namespace PhysicalPersonDirectory.Tests.Unit;
 
 [TestFixture]
 public class ImageServiceTests
 {
-    private ImageService _imageService;
-    private Mock<IConfiguration> _configurationMock;
-    private Mock<IFileInfoFactory> _fileInfoFactoryMock;
-    private Mock<IFileStreamService> _fileStreamServiceMock;
-
     [SetUp]
     public void SetUp()
     {
         _configurationMock = new Mock<IConfiguration>();
-        _fileInfoFactoryMock = new Mock<IFileInfoFactory>();
+        _fileSystemMock = new Mock<IFileSystem>();
         _fileStreamServiceMock = new Mock<IFileStreamService>();
-        _imageService = new ImageService(_configurationMock.Object, _fileInfoFactoryMock.Object,
+        _imageService = new ImageService(_configurationMock.Object, _fileSystemMock.Object,
             _fileStreamServiceMock.Object);
     }
+
+    private ImageService _imageService;
+    private Mock<IConfiguration> _configurationMock;
+    private Mock<IFileSystem> _fileSystemMock;
+    private Mock<IFileStreamService> _fileStreamServiceMock;
 
     [Test]
     public async Task SaveImage_ValidImage_Success()
@@ -50,7 +50,7 @@ public class ImageServiceTests
         fileInfoMock.Setup(f => f.Exists).Returns(true);
         fileInfoMock.Setup(f => f.Delete());
 
-        _fileInfoFactoryMock.Setup(fs => fs.New(It.IsAny<string>())).Returns(fileInfoMock.Object);
+        _fileSystemMock.Setup(fs => fs.FileInfo.New(It.IsAny<string>())).Returns(fileInfoMock.Object);
 
         // Act & Assert
         Assert.DoesNotThrow(() => _imageService.DeleteImage(fileName));
@@ -67,7 +67,7 @@ public class ImageServiceTests
         fileInfoMock.Setup(f => f.Exists).Returns(false);
 
         _configurationMock.Setup(cfg => cfg["ImageSettings:ImageBaseUrl"]).Returns("TestImagePath");
-        _fileInfoFactoryMock.Setup(fs => fs.New(filePath)).Returns(fileInfoMock.Object);
+        _fileSystemMock.Setup(fs => fs.FileInfo.New(filePath)).Returns(fileInfoMock.Object);
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => _imageService.DeleteImage(fileName));

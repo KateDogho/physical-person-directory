@@ -9,12 +9,12 @@ namespace PhysicalPersonDirectory.Application.Commands;
 
 public class UploadImageCommandHandler : IRequestHandler<UploadImageCommand, UploadImageCommandResult>
 {
+    private readonly IImageService _imageService;
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IImageService _imageService;
 
     public UploadImageCommandHandler(IPhysicalPersonRepository physicalPersonRepository,
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         IImageService imageService)
     {
         _physicalPersonRepository = physicalPersonRepository;
@@ -33,17 +33,14 @@ public class UploadImageCommandHandler : IRequestHandler<UploadImageCommand, Upl
         if (string.IsNullOrEmpty(request.Image.FileName))
             throw new InvalidEnumArgumentException(Resources.Resources.ImageCannotBeUploadedException);
 
-        if (!string.IsNullOrEmpty(physicalPerson.ImagePath))
-        {
-            _imageService.DeleteImage(physicalPerson.ImagePath);
-        }
+        if (!string.IsNullOrEmpty(physicalPerson.ImagePath)) _imageService.DeleteImage(physicalPerson.ImagePath);
 
         var fileName = await _imageService.SaveImage(request.Image, cancellationToken);
-        
+
         physicalPerson.ImagePath = fileName;
 
         _physicalPersonRepository.Update(physicalPerson);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return new UploadImageCommandResult(request.Image.FileName);
     }

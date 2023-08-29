@@ -1,5 +1,5 @@
 using MediatR;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 
 namespace PhysicalPersonDirectory.Application.Queries;
@@ -9,20 +9,24 @@ public class
         RelatedPhysicalPersonsReportQueryResult>
 {
     private readonly IPhysicalPersonRepository _physicalPersonRepository;
+    private readonly IRelatedPhysicalPersonRepository _relatedPhysicalPersonRepository;
 
-    public RelatedPhysicalPersonsReportQueryHandler(IPhysicalPersonRepository physicalPersonRepository)
+    public RelatedPhysicalPersonsReportQueryHandler(IPhysicalPersonRepository physicalPersonRepository,
+        IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository)
     {
         _physicalPersonRepository = physicalPersonRepository;
+        _relatedPhysicalPersonRepository = relatedPhysicalPersonRepository;
     }
 
     public Task<RelatedPhysicalPersonsReportQueryResult> Handle(RelatedPhysicalPersonsReportQuery request,
         CancellationToken cancellationToken)
     {
-        var physicalPersons = _physicalPersonRepository.Query(pp => pp.RelatedPhysicalPersons.Any())
+        var relatedPhysicalPersons = _relatedPhysicalPersonRepository.Query()
+            .GroupBy(rpp => rpp.TargetPersonId)
             .Select(pp => new RelatedPhysicalPersonsReportQueryResult.RelatedPerson
             {
-                RelatedPersonId = pp.Id,
-                PersonTypes = pp.RelatedPhysicalPersons.GroupBy(rpp => rpp.RelationType).Select(rpp =>
+                RelatedPersonId = pp.Key,
+                PersonTypes = pp.GroupBy(rpp => rpp.RelationType).Select(rpp =>
                     new RelatedPhysicalPersonsReportQueryResult.RelatedPersonType
                     {
                         RelationType = rpp.Key,
@@ -31,7 +35,7 @@ public class
             })
             .ToList();
 
-        return Task.FromResult(new RelatedPhysicalPersonsReportQueryResult(physicalPersons));
+        return Task.FromResult(new RelatedPhysicalPersonsReportQueryResult(relatedPhysicalPersons));
     }
 }
 

@@ -1,4 +1,5 @@
 using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.CityManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 
 namespace PhysicalPersonDirectory.Infrastructure.Repositories;

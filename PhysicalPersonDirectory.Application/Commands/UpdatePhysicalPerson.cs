@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using MediatR;
 using PhysicalPersonDirectory.Application.Models;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhoneNumberManagement;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
@@ -10,8 +12,8 @@ namespace PhysicalPersonDirectory.Application.Commands;
 public class
     UpdatePhysicalPersonCommandHandler : IRequestHandler<UpdatePhysicalPersonCommand, UpdatePhysicalPersonCommandResult>
 {
-    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly ICityRepository _cityRepository;
+    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public UpdatePhysicalPersonCommandHandler(
@@ -28,10 +30,10 @@ public class
         CancellationToken cancellationToken)
     {
         var physicalPerson = _physicalPersonRepository.OfId(request.Id);
-        
+
         if (physicalPerson is null)
             throw new ArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
-        
+
         var city = _cityRepository.OfId(request.CityId);
 
         if (city is null)
@@ -49,8 +51,8 @@ public class
             Number = pn.Number
         }).ToList();
 
-        _physicalPersonRepository.Insert(physicalPerson);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        _physicalPersonRepository.Update(physicalPerson);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
         return new UpdatePhysicalPersonCommandResult(physicalPerson.Id);
     }
@@ -58,9 +60,8 @@ public class
 
 public record UpdatePhysicalPersonCommand : IRequest<UpdatePhysicalPersonCommandResult>
 {
-    [NotMapped]
-    public int Id { get; set; }
-    
+    [NotMapped] [JsonIgnore] public int Id { get; set; }
+
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;

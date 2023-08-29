@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PhysicalPersonDirectory.Application.Models;
 using PhysicalPersonDirectory.Application.Services.Abstract;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Repositories;
 
 namespace PhysicalPersonDirectory.Application.Queries;
@@ -12,17 +12,19 @@ namespace PhysicalPersonDirectory.Application.Queries;
 public class
     PhysicalPersonDetailsQueryHandler : IRequestHandler<PhysicalPersonDetailsQuery, PhysicalPersonDetailsQueryResult>
 {
-    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IConfiguration _configuration;
     private readonly IImageService _imageService;
+    private readonly IPhysicalPersonRepository _physicalPersonRepository;
+    private readonly IRelatedPhysicalPersonRepository _relatedPhysicalPersonRepository;
 
     public PhysicalPersonDetailsQueryHandler(IPhysicalPersonRepository physicalPersonRepository,
         IConfiguration configuration,
-        IImageService imageService)
+        IImageService imageService, IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository)
     {
         _physicalPersonRepository = physicalPersonRepository;
         _configuration = configuration;
         _imageService = imageService;
+        _relatedPhysicalPersonRepository = relatedPhysicalPersonRepository;
     }
 
     public Task<PhysicalPersonDetailsQueryResult> Handle(PhysicalPersonDetailsQuery request,
@@ -30,14 +32,24 @@ public class
     {
         var physicalPerson = _physicalPersonRepository.Query(pp => pp.Id == request.Id)
             .Include(pp => pp.PhoneNumbers)
-            .Include(pp => pp.RelatedPhysicalPersons)
             .Include(pp => pp.City)
             .FirstOrDefault();
 
         if (physicalPerson is null)
             throw new InvalidEnumArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
 
-        return Task.FromResult(new PhysicalPersonDetailsQueryResult()
+        var relatedPhysicalPersons = _relatedPhysicalPersonRepository
+            .Query(rpp => rpp.TargetPersonId == physicalPerson.Id)
+            .Select(rrp =>
+                new RelatedPhysicalPersonModel
+                {
+                    FirstName = rrp.RelatedPerson.FirstName,
+                    LastName = rrp.RelatedPerson.LastName,
+                    Type = rrp.RelationType
+                })
+            .ToArray();
+
+        var physicalPersonDetailsQueryResult = new PhysicalPersonDetailsQueryResult
         {
             Id = physicalPerson.Id,
             FirstName = physicalPerson.FirstName,
@@ -53,14 +65,10 @@ public class
             ImagePath = !string.IsNullOrEmpty(physicalPerson.ImagePath)
                 ? _imageService.GetImageUrl(physicalPerson.ImagePath)
                 : null,
-            RelatedPhysicalPersons = physicalPerson.RelatedPhysicalPersons.Select(rrp =>
-                new RelatedPhysicalPersonModel
-                {
-                    FirstName = rrp.RelatedPerson.FirstName,
-                    LastName = rrp.RelatedPerson.LastName,
-                    Type = rrp.RelationType
-                }).ToArray()
-        });
+            RelatedPhysicalPersons = relatedPhysicalPersons
+        };
+
+        return Task.FromResult(physicalPersonDetailsQueryResult);
     }
 }
 

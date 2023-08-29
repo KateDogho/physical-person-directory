@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using PhysicalPersonDirectory.Domain.Shared;
 
-namespace PhysicalPersonDirectory.Domain;
+namespace PhysicalPersonDirectory.Domain.PhoneNumberManagement;
 
 public class PhoneNumber : BaseEntity
 {

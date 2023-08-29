@@ -22,7 +22,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.City", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.CityManagement.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumber", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumberManagement.PhoneNumber", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.ToTable("PhoneNumbers", (string)null);
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPerson", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,7 +129,7 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.ToTable("PhysicalPersons", (string)null);
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.RelatedPhysicalPerson", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.RelatedPhysicalPerson", b =>
                 {
                     b.Property<int>("TargetPersonId")
                         .HasColumnType("int");
@@ -147,17 +147,17 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.ToTable("RelatedPhysicalPersons", (string)null);
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumber", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhoneNumberManagement.PhoneNumber", b =>
                 {
-                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", null)
+                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", null)
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("PhysicalPersonId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPerson", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", b =>
                 {
-                    b.HasOne("PhysicalPersonDirectory.Domain.City", "City")
+                    b.HasOne("PhysicalPersonDirectory.Domain.CityManagement.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -166,16 +166,16 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.Navigation("City");
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.RelatedPhysicalPerson", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.RelatedPhysicalPerson", b =>
                 {
-                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "RelatedPerson")
+                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", "RelatedPerson")
                         .WithMany()
                         .HasForeignKey("RelatedPersonId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPerson", "TargetPerson")
-                        .WithMany("RelatedPhysicalPersons")
+                    b.HasOne("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", "TargetPerson")
+                        .WithMany()
                         .HasForeignKey("TargetPersonId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -185,11 +185,9 @@ namespace PhysicalPersonDirectory.Infrastructure.Migrations
                     b.Navigation("TargetPerson");
                 });
 
-            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPerson", b =>
+            modelBuilder.Entity("PhysicalPersonDirectory.Domain.PhysicalPersonManagement.PhysicalPerson", b =>
                 {
                     b.Navigation("PhoneNumbers");
-
-                    b.Navigation("RelatedPhysicalPersons");
                 });
 #pragma warning restore 612, 618
         }

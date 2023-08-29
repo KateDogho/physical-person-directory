@@ -1,5 +1,5 @@
+using System.IO.Abstractions;
 using FluentValidation;
-using PhysicalPersonDirectory.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PhysicalPersonDirectory.Api.Middlewares;
@@ -7,10 +7,11 @@ using PhysicalPersonDirectory.Api.OperationFilters;
 using PhysicalPersonDirectory.Application;
 using PhysicalPersonDirectory.Application.Services.Abstract;
 using PhysicalPersonDirectory.Application.Services.Concrete;
+using PhysicalPersonDirectory.Application.Validators;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
+using PhysicalPersonDirectory.Infrastructure;
 using PhysicalPersonDirectory.Infrastructure.Repositories;
-using PhysicalPersonDirectory.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>(
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IPhoneNumberRepository, PhoneNumberRepository>();
 builder.Services.AddScoped<IRelatedPhysicalPersonRepository, RelatedPhysicalPersonRepository>();
+builder.Services.AddScoped<IFileSystem, FileSystem>();
 builder.Services.AddScoped<IFileStreamService, FileStreamService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 

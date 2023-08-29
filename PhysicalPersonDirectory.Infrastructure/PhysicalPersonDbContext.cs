@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.CityManagement;
+using PhysicalPersonDirectory.Domain.PhoneNumberManagement;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 
 namespace PhysicalPersonDirectory.Infrastructure;
 
@@ -12,11 +14,7 @@ public class PhysicalPersonDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<PhysicalPerson>()
-            .ToTable("PhysicalPersons")
-            .HasMany(pp => pp.RelatedPhysicalPersons)
-            .WithOne(rp => rp.TargetPerson)
-            .HasForeignKey(rp => rp.TargetPersonId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .ToTable("PhysicalPersons");
         modelBuilder.Entity<PhysicalPerson>()
             .HasOne(entity => entity.City)
             .WithMany()
@@ -25,21 +23,21 @@ public class PhysicalPersonDbContext : DbContext
             .HasMany(entity => entity.PhoneNumbers)
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         modelBuilder.Entity<City>().ToTable("Cities")
-            .HasData(new()
+            .HasData(new City
             {
                 Id = 1,
                 Name = "Tbilisi"
-            }, new()
+            }, new City
             {
                 Id = 2,
                 Name = "Kutaisi"
-            }, new()
+            }, new City
             {
                 Id = 3,
                 Name = "Batumi"
-            }, new()
+            }, new City
             {
                 Id = 4,
                 Name = "Other"
@@ -55,6 +53,12 @@ public class PhysicalPersonDbContext : DbContext
             .HasOne(rpp => rpp.RelatedPerson)
             .WithMany()
             .HasForeignKey(rpp => rpp.RelatedPersonId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<RelatedPhysicalPerson>()
+            .HasOne(rpp => rpp.TargetPerson)
+            .WithMany()
+            .HasForeignKey(rpp => rpp.TargetPersonId)
             .OnDelete(DeleteBehavior.NoAction);
 
         base.OnModelCreating(modelBuilder);

@@ -7,89 +7,88 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="JetBrains.ReSharper.TestRunner.Abstractions">
-        <HintPath>..\..\..\..\..\Applications\Rider.app\Contents\lib\ReSharperHost\TestRunner\netcoreapp3.0\JetBrains.ReSharper.TestRunner.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="MediatR">
-        <HintPath>..\..\..\.nuget\packages\mediatr\12.1.1\lib\net6.0\MediatR.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
-        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.Http">
-        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.AspNetCore.Http.Features">
-        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.Features.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
-        <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
-      </Reference>
+        <Reference Include="JetBrains.ReSharper.TestRunner.Abstractions">
+            <HintPath>..\..\..\..\..\Applications\Rider.app\Contents\lib\ReSharperHost\TestRunner\netcoreapp3.0\JetBrains.ReSharper.TestRunner.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="MediatR">
+            <HintPath>..\..\..\.nuget\packages\mediatr\12.1.1\lib\net6.0\MediatR.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+            <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNetCore.Http">
+            <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.AspNetCore.Http.Features">
+            <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
+            <HintPath>..\..\..\.dotnet\shared\Microsoft.AspNetCore.App\7.0.4\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.7.1" />
-      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
-      <PackageReference Include="System.IO.Abstractions" Version="19.2.67" />
+        <PackageReference Include="FluentValidation" Version="11.7.1"/>
+        <PackageReference Include="MediatR.Contracts" Version="2.0.1"/>
+        <PackageReference Include="System.IO.Abstractions" Version="19.2.67"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PhysicalPersonDirectory.Domain\PhysicalPersonDirectory.Domain.csproj" />
-      <ProjectReference Include="..\PhysicalPersonDirectory.Infrastructure\PhysicalPersonDirectory.Infrastructure.csproj" />
+        <ProjectReference Include="..\PhysicalPersonDirectory.Infrastructure\PhysicalPersonDirectory.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Resources.eng.resx">
-        <LastGenOutput>Resources.eng.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.en-US.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.ka-GE.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.ka-GE.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\resources.resx">
-        <LastGenOutput>resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\resources.en-US.resx">
-        <LastGenOutput>resources.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\resources.ka-GE.resx">
-        <LastGenOutput>resources.ka-GE.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.resx">
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.en-US.resx">
-        <LastGenOutput>Resources.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Resources.ka-GE.resx">
-        <LastGenOutput>Resources.ka-GE.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="Resources.eng.resx">
+            <LastGenOutput>Resources.eng.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.en-US.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.en-US.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.ka-GE.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.ka-GE.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\resources.resx">
+            <LastGenOutput>resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\resources.en-US.resx">
+            <LastGenOutput>resources.en-US.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\resources.ka-GE.resx">
+            <LastGenOutput>resources.ka-GE.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.resx">
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.en-US.resx">
+            <LastGenOutput>Resources.en-US.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Resources.ka-GE.resx">
+            <LastGenOutput>Resources.ka-GE.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Resources\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Resources\Resources.en-US.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.en-US.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Resources\Resources.ka-GE.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.ka-GE.resx</DependentUpon>
-      </Compile>
+        <Compile Update="Resources\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Resources\Resources.en-US.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.en-US.resx</DependentUpon>
+        </Compile>
+        <Compile Update="Resources\Resources.ka-GE.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.ka-GE.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

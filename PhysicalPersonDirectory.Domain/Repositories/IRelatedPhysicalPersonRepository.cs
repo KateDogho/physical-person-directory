@@ -1,3 +1,4 @@
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
 namespace PhysicalPersonDirectory.Domain.Repositories;

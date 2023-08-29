@@ -1,7 +1,7 @@
 using System.ComponentModel;
+using System.IO.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.IO.Abstractions;
 using PhysicalPersonDirectory.Application.Services.Abstract;
 
 namespace PhysicalPersonDirectory.Application.Services.Concrete;
@@ -9,10 +9,10 @@ namespace PhysicalPersonDirectory.Application.Services.Concrete;
 public class ImageService : IImageService
 {
     private readonly IConfiguration _configuration;
-    private readonly IFileInfoFactory _fileInfoFactory;
+    private readonly IFileSystem _fileInfoFactory;
     private readonly IFileStreamService _fileStreamService;
 
-    public ImageService(IConfiguration configuration, IFileInfoFactory fileInfoFactory,
+    public ImageService(IConfiguration configuration, IFileSystem fileInfoFactory,
         IFileStreamService fileStreamService)
     {
         _configuration = configuration;
@@ -37,15 +37,12 @@ public class ImageService : IImageService
     public void DeleteImage(string fileName)
     {
         var path = GetImagePath(fileName);
-        var fileInfo = _fileInfoFactory.New(path);
+        var fileInfo = _fileInfoFactory.FileInfo.New(path);
+
         if (fileInfo.Exists)
-        {
             fileInfo.Delete();
-        }
         else
-        {
-            throw new ArgumentException("Image doesn't exist");
-        }
+            throw new ArgumentException(Resources.Resources.ImageDoesnExistException);
     }
 
     public string GetImageUrl(string fileName)
@@ -53,11 +50,13 @@ public class ImageService : IImageService
         var imageBaseUrl = _configuration["ImageSettings:ImageBaseUrl"];
 
         if (string.IsNullOrEmpty(imageBaseUrl))
-            throw new InvalidOperationException("Image Base Url isn't configured");
+            throw new InvalidOperationException(Resources.Resources.ImageBaseUrlIsntConfiguredException);
 
         return Path.Combine(imageBaseUrl, fileName);
     }
 
-    private static string GetImagePath(string fileName) =>
-        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/", fileName);
+    private static string GetImagePath(string fileName)
+    {
+        return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images/", fileName);
+    }
 }

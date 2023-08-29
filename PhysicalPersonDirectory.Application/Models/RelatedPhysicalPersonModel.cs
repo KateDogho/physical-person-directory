@@ -1,4 +1,5 @@
 using PhysicalPersonDirectory.Domain;
+using PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 
 namespace PhysicalPersonDirectory.Application.Models;
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 using PhysicalPersonDirectory.Application.Commands;
-using Resources = PhysicalPersonDirectory.Application.Resources.Resources;
+using PhysicalPersonDirectory.Application.Shared.Constants;
 
 namespace PhysicalPersonDirectory.Application.Validators;
 
@@ -15,7 +15,7 @@ public class CreatePhysicalPersonValidator : AbstractValidator<CreatePhysicalPer
             .MaximumLength(50)
             .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_FirstName);
         RuleFor(x => x.FirstName)
-            .Matches(@"^([a-zA-Z]+|[\u10A0-\u10FF]+)$")
+            .Matches(RegexConstants.NamesRegex)
             .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_FirstName_Regex);
         RuleFor(x => x.LastName)
             .NotNull()
@@ -24,13 +24,17 @@ public class CreatePhysicalPersonValidator : AbstractValidator<CreatePhysicalPer
             .MaximumLength(50)
             .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_FirstName);
         RuleFor(x => x.LastName)
-            .Matches(@"^([a-zA-Z]+|[\u10A0-\u10FF]+)$")
+            .Matches(RegexConstants.NamesRegex)
             .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_FirstName_Regex);
         RuleFor(x => x.IdentificationNumber)
             .NotNull()
             .NotEmpty()
             .Length(11)
             .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_IdentificationNumber);
-        ;
+        RuleFor(x => x.DateOfBirth)
+            .NotNull()
+            .NotEmpty()
+            .LessThanOrEqualTo(DateTime.Now.AddYears(-18))
+            .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_LessThan18);
     }
 }

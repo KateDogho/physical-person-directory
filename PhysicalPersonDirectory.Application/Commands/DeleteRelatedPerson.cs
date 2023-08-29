@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using PhysicalPersonDirectory.Domain.Repositories;
 using PhysicalPersonDirectory.Domain.Shared.Repositories;
 
@@ -9,44 +9,36 @@ namespace PhysicalPersonDirectory.Application.Commands;
 public class
     DeleteRelatedPersonCommandHandler : IRequestHandler<DeleteRelatedPersonCommand, DeleteRelatedPersonCommandResult>
 {
-    private readonly IPhysicalPersonRepository _physicalPersonRepository;
+    private readonly IRelatedPhysicalPersonRepository _relatedPhysicalPersonRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteRelatedPersonCommandHandler(
-        IPhysicalPersonRepository physicalPersonRepository,
-        IUnitOfWork unitOfWork)
+    public DeleteRelatedPersonCommandHandler(IUnitOfWork unitOfWork,
+        IRelatedPhysicalPersonRepository relatedPhysicalPersonRepository)
     {
-        _physicalPersonRepository = physicalPersonRepository;
         _unitOfWork = unitOfWork;
+        _relatedPhysicalPersonRepository = relatedPhysicalPersonRepository;
     }
 
     public async Task<DeleteRelatedPersonCommandResult> Handle(DeleteRelatedPersonCommand request,
         CancellationToken cancellationToken)
     {
-        var physicalPerson = _physicalPersonRepository.Query(pp => pp.Id == request.Id)
-            .Include(pp=>pp.RelatedPhysicalPersons)
+        var relation = _relatedPhysicalPersonRepository.Query(pp =>
+                pp.TargetPersonId == request.Id && pp.RelatedPersonId == request.RelatedPersonId)
             .FirstOrDefault();
 
-        if (physicalPerson is null)
-            throw new ArgumentException(Resources.Resources.PhysicalPersonNotFoundException);
+        if (relation is null)
+            throw new ArgumentException(Resources.Resources.RelationNotFoundException);
 
-        var relatedPerson =
-            physicalPerson.RelatedPhysicalPersons.FirstOrDefault(pp => pp.RelatedPersonId == request.RelatedPersonId);
-        if (relatedPerson is null)
-            throw new ArgumentException(Resources.Resources.RelatedPersonNotFoundException);
+        _relatedPhysicalPersonRepository.Delete(relation);
+        await _unitOfWork.SaveAsync(cancellationToken);
 
-        physicalPerson.RelatedPhysicalPersons.Remove(relatedPerson);
-
-        _physicalPersonRepository.Update(physicalPerson);
-        await _unitOfWork.CommitAsync(cancellationToken);
-
-        return new DeleteRelatedPersonCommandResult(physicalPerson.Id, relatedPerson.RelatedPersonId);
+        return new DeleteRelatedPersonCommandResult(relation.TargetPersonId, relation.RelatedPersonId);
     }
 }
 
 public record DeleteRelatedPersonCommand : IRequest<DeleteRelatedPersonCommandResult>
 {
-    [NotMapped] public int Id { get; set; }
+    [NotMapped] [JsonIgnore] public int Id { get; set; }
 
     public int RelatedPersonId { get; set; }
 }

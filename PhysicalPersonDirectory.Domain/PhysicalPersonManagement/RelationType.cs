@@ -1,4 +1,4 @@
-namespace PhysicalPersonDirectory.Domain;
+namespace PhysicalPersonDirectory.Domain.PhysicalPersonManagement;
 
 public enum RelationType
 {

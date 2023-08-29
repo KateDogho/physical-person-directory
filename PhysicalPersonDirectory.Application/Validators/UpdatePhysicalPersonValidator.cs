@@ -30,6 +30,11 @@ public class UpdatePhysicalPersonValidator : AbstractValidator<UpdatePhysicalPer
             .NotEmpty()
             .Length(11)
             .WithMessage(Resources.Resources.UpdatePhysicalPersonValidator_IdentificationNumber);
+        RuleFor(x => x.DateOfBirth)
+            .NotNull()
+            .NotEmpty()
+            .LessThanOrEqualTo(DateTime.Now.AddYears(-18))
+            .WithMessage(Resources.Resources.CreatePhysicalPersonValidator_LessThan18);
         ;
     }
 }
